@@ -141,10 +141,13 @@ textarea.doc{flex:1;width:100%;font-family:var(--mono);font-size:.85vw;line-heig
 .onion{position:relative;width:30vw;height:30vw;margin:auto}
 .onion div{position:absolute;border-radius:50%;display:flex;justify-content:center;font-weight:700;font-size:1.05vw;padding-top:1.2vh}
 .layers div{border-radius:14px;padding:1.7vh 1vw;margin-bottom:1vh;font-weight:700;font-size:1.3vw;text-align:center}
-.menti{position:fixed;inset:0;background:rgba(251,250,247,.97);z-index:50;display:none;flex-direction:column;padding:3vh 4vw}
+.menti{position:fixed;inset:0;background:#FBFAF7;z-index:50;display:none;flex-direction:column;padding:3vh 4vw}
 .menti.show{display:flex}
 .menti .bar{display:flex;align-items:center;gap:1vw;margin-bottom:1.6vh}
-.menti iframe{flex:1;width:100%;border:1px solid var(--line);border-radius:18px;background:#fff}
+.menti .mbody{flex:1;display:flex;gap:2vw;min-height:0}
+.menti .qr{width:26vw;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;border:1px solid var(--line);border-radius:18px;padding:2vh 1vw;text-align:center}
+.menti .qr img{width:20vw;height:20vw;image-rendering:pixelated}
+.menti iframe{flex:1;min-width:0;border:1px solid var(--line);border-radius:18px;background:#fff}
 .settings{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:70}
 .settings.show{display:flex}
 .settings .card{width:44vw}
@@ -526,7 +529,10 @@ textarea.doc{flex:1;width:100%;font-family:var(--mono);font-size:.85vw;line-heig
 
 <div class="menti" id="menti">
   <div class="bar"><div class="kicker" style="margin:0">📱 Live vote · scan the code on screen or go to menti.com</div><div style="margin-left:auto;display:flex;gap:.8vw"><button class="btn ghost" id="mentiReload">↻ Reload</button><button class="btn" id="mentiClose">✕ Back to slide (M)</button></div></div>
+  <div class="mbody">
   <iframe id="mentiFrame" data-src="https://www.mentimeter.com/app/presentation/al28to5avefgrzpuo16vv1j1755ywqrj/embed" sandbox="allow-popups allow-scripts allow-same-origin allow-presentation" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+  <div class="qr"><div class="kicker" style="margin-bottom:1.4vh">Scan to vote</div><img src="data:image/png;base64,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" alt="QR code to menti.com voting page"><p style="font-size:1.3vw;margin:1.6vh 0 0">or go to <b>menti.com</b></p><p class="mono" style="font-size:1.1vw;margin:.4vh 0 0">menti.com/aly6ockooxw1</p></div>
+  </div>
 </div>
 
 <div class="settings" id="settings"><div class="card">
