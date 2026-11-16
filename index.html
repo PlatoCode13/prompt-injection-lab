@@ -141,6 +141,10 @@ textarea.doc{flex:1;width:100%;font-family:var(--mono);font-size:.85vw;line-heig
 .onion{position:relative;width:30vw;height:30vw;margin:auto}
 .onion div{position:absolute;border-radius:50%;display:flex;justify-content:center;font-weight:700;font-size:1.05vw;padding-top:1.2vh}
 .layers div{border-radius:14px;padding:1.7vh 1vw;margin-bottom:1vh;font-weight:700;font-size:1.3vw;text-align:center}
+.menti{position:fixed;inset:0;background:rgba(251,250,247,.97);z-index:50;display:none;flex-direction:column;padding:3vh 4vw}
+.menti.show{display:flex}
+.menti .bar{display:flex;align-items:center;gap:1vw;margin-bottom:1.6vh}
+.menti iframe{flex:1;width:100%;border:1px solid var(--line);border-radius:18px;background:#fff}
 .settings{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:70}
 .settings.show{display:flex}
 .settings .card{width:44vw}
@@ -268,8 +272,9 @@ textarea.doc{flex:1;width:100%;font-family:var(--mono);font-size:.85vw;line-heig
 <!-- 7 VOTE -->
 <section class="slide" data-who="Amal" data-notes="<b>Amal:</b> Quick game. Our agent will process one of these three emails. Which one hijacks it? Hands up for A... B... C... [Click each card to reveal.] It's B, the most boring one. The attack is not in what a human reads, it's in what the machine reads. A looks scary but contains no instruction to the AI at all. C is a normal request.">
   <div class="speaker">🎤 <b>Amal</b></div>
-  <div class="kicker">Audience vote · raise your hand</div>
+  <div class="kicker">Audience vote · on your phone</div>
   <h2>Your AI assistant reads your inbox. Which email takes control of it?</h2>
+  <div style="margin:-1.6vh 0 1.6vh"><button class="btn yellow" onclick="openMenti()">📱 Vote live on your phone</button> <span class="muted small">then click a card to reveal it</span></div>
   <div class="emails">
     <div class="email ok" onclick="this.classList.add('shown')">
       <div class="from">📧 From: Your Bank &lt;alerts@secure-bank-verify.com&gt;</div>
@@ -407,7 +412,7 @@ textarea.doc{flex:1;width:100%;font-family:var(--mono);font-size:.85vw;line-heig
 <section class="slide" data-who="Amal" data-notes="<b>Amal:</b> Now a question for you. Simon Willison, who coined 'prompt injection', calls this the lethal trifecta: access to private data, exposure to untrusted content, and the ability to communicate externally. Raise your hand if your capstone project has all three. [Wait.] Look around. That's most of us. If you have all three, an attacker can steal data. Remove one leg, and the theft path is gone.">
   <div class="speaker">🎤 <b>Amal</b></div>
   <div class="kicker">✋ Hands up: does your capstone have all three?</div>
-  <h2>The lethal trifecta</h2>
+  <h2>The lethal trifecta <button class="btn yellow" style="vertical-align:middle;margin-left:1vw" onclick="openMenti()">📱 Vote live</button></h2>
   <div class="row" style="align-items:center">
     <div class="col">
       <div class="venn">
@@ -519,6 +524,11 @@ textarea.doc{flex:1;width:100%;font-family:var(--mono);font-size:.85vw;line-heig
   <div style="display:flex;gap:1vw;margin-top:1.4vh"><button class="btn red" id="approveYes">Allow</button><button class="btn green" id="approveNo">Deny</button></div>
 </div></div>
 
+<div class="menti" id="menti">
+  <div class="bar"><div class="kicker" style="margin:0">📱 Live vote · scan the code on screen or go to menti.com</div><div style="margin-left:auto;display:flex;gap:.8vw"><button class="btn ghost" id="mentiReload">↻ Reload</button><button class="btn" id="mentiClose">✕ Back to slide (M)</button></div></div>
+  <iframe id="mentiFrame" data-src="https://www.mentimeter.com/app/presentation/al28to5avefgrzpuo16vv1j1755ywqrj/embed" sandbox="allow-popups allow-scripts allow-same-origin allow-presentation" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+</div>
+
 <div class="settings" id="settings"><div class="card">
   <h3>Settings</h3>
   <label>Provider</label>
@@ -536,7 +546,7 @@ textarea.doc{flex:1;width:100%;font-family:var(--mono);font-size:.85vw;line-heig
   <input id="sServer" value="http://localhost:8765">
   <div style="display:flex;gap:1vw;margin-top:2vh"><button class="btn" id="sSave">Save</button><button class="btn ghost" id="sTest">Test connection</button><button class="btn ghost" id="sClose">Close</button></div>
   <p class="small muted" id="sMsg" style="margin-top:1vh"></p>
-  <p class="small muted">Keys: ← → navigate · N notes · S settings · F fullscreen</p>
+  <p class="small muted">Keys: ← → navigate · N notes · S settings · F fullscreen · M live vote</p>
 </div></div>
 
 <script>
@@ -867,6 +877,13 @@ $('benchRun').onclick=async()=>{
 $('benchStop').onclick=()=>{ stopBench=true; };
 $('benchExport').onclick=()=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(bench,null,2)],{type:'application/json'})); a.download='benchmark_results.json'; a.click(); };
 $('benchImport').onchange=async e=>{ const f=e.target.files[0]; if(!f) return; bench=JSON.parse(await f.text()); LS.setItem('pi_bench',JSON.stringify(bench)); renderBars(); };
+
+/* ============ MENTIMETER ============ */
+function openMenti(){ const f=$('mentiFrame'); if(!f.src) f.src=f.dataset.src; $('menti').classList.add('show'); }
+function closeMenti(){ $('menti').classList.remove('show'); }
+$('mentiClose').onclick=closeMenti;
+$('mentiReload').onclick=()=>{ const f=$('mentiFrame'); f.src=f.dataset.src; };
+document.addEventListener('keydown',e=>{ const t=e.target.tagName; if(t==='INPUT'||t==='TEXTAREA') return; if(e.key==='m'||e.key==='M'){ $('menti').classList.contains('show')?closeMenti():openMenti(); } });
 
 /* ============ INIT ============ */
 renderDocs(); updateStatus(); show(cur);
