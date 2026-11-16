@@ -23,7 +23,7 @@ python demo_server.py
 
 Open `http://localhost:8000`, press **S**, paste a Gemini API key (free at aistudio.google.com) and click **Test connection**.
 
-Keys: `→`/`←` navigate · `N` notes · `S` settings · `F` fullscreen · `M` live vote.
+Keys: `→`/`←` navigate · `N` notes · `S` settings · `F` fullscreen · `Q` vote QR code.
 
 The slides also work without the server (e.g. on GitHub Pages); stolen data is then shown in the in-page panel instead of the terminal. API keys are only kept in your browser and never written to any file.
 

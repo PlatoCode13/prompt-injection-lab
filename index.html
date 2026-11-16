@@ -277,7 +277,7 @@ textarea.doc{flex:1;width:100%;font-family:var(--mono);font-size:.85vw;line-heig
   <div class="speaker">🎤 <b>Amal</b></div>
   <div class="kicker">Audience vote · on your phone</div>
   <h2>Your AI assistant reads your inbox. Which email takes control of it?</h2>
-  <div style="margin:-1.6vh 0 1.6vh"><button class="btn yellow" onclick="openMenti()">📱 Vote live on your phone</button> <span class="muted small">then click a card to reveal it</span></div>
+  <div style="margin:-1.6vh 0 1.6vh"><button class="btn yellow" onclick="openMenti()">📱 Show QR code (Q)</button> <span class="muted small">then click a card to reveal it</span></div>
   <div class="emails">
     <div class="email ok" onclick="this.classList.add('shown')">
       <div class="from">📧 From: Your Bank &lt;alerts@secure-bank-verify.com&gt;</div>
@@ -415,7 +415,7 @@ textarea.doc{flex:1;width:100%;font-family:var(--mono);font-size:.85vw;line-heig
 <section class="slide" data-who="Amal" data-notes="<b>Amal:</b> Now a question for you. Simon Willison, who coined 'prompt injection', calls this the lethal trifecta: access to private data, exposure to untrusted content, and the ability to communicate externally. Raise your hand if your capstone project has all three. [Wait.] Look around. That's most of us. If you have all three, an attacker can steal data. Remove one leg, and the theft path is gone.">
   <div class="speaker">🎤 <b>Amal</b></div>
   <div class="kicker">✋ Hands up: does your capstone have all three?</div>
-  <h2>The lethal trifecta <button class="btn yellow" style="vertical-align:middle;margin-left:1vw" onclick="openMenti()">📱 Vote live</button></h2>
+  <h2>The lethal trifecta <button class="btn yellow" style="vertical-align:middle;margin-left:1vw" onclick="openMenti()">📱 QR code</button></h2>
   <div class="row" style="align-items:center">
     <div class="col">
       <div class="venn">
@@ -528,10 +528,16 @@ textarea.doc{flex:1;width:100%;font-family:var(--mono);font-size:.85vw;line-heig
 </div></div>
 
 <div class="menti" id="menti">
-  <div class="bar"><div class="kicker" style="margin:0">📱 Live vote · scan the code on screen or go to menti.com</div><div style="margin-left:auto;display:flex;gap:.8vw"><button class="btn ghost" id="mentiReload">↻ Reload</button><button class="btn" id="mentiClose">✕ Back to slide (M)</button></div></div>
-  <div class="mbody">
-  <iframe id="mentiFrame" data-src="https://www.mentimeter.com/app/presentation/al28to5avefgrzpuo16vv1j1755ywqrj/embed" sandbox="allow-popups allow-scripts allow-same-origin allow-presentation" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-  <div class="qr"><div class="kicker" style="margin-bottom:1.4vh">Scan to vote</div><img src="data:image/png;base64,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" alt="QR code to menti.com voting page"><p style="font-size:1.3vw;margin:1.6vh 0 0">or go to <b>menti.com</b></p><p class="mono" style="font-size:1.1vw;margin:.4vh 0 0">menti.com/aly6ockooxw1</p></div>
+  <div class="bar"><div style="margin-left:auto;display:flex;gap:.8vw"><a class="btn ghost" id="mentiResults" href="https://www.mentimeter.com/app/presentation/al28to5avefgrzpuo16vv1j1755ywqrj" target="_blank" rel="noopener" style="text-decoration:none">📊 Live results ↗</a><button class="btn" id="mentiClose">✕ Back to slide (Q)</button></div></div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;gap:5vw">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAdQAAAHUAQAAAACrXOTBAAAF80lEQVR42u1dPY7zNhB9IymQiwBaJG0Au8gBvgsEUpEyh8gNcgRrb5AjpMwJ0gWf3KULkDaNFukDGfgC2Amtl4KUJe/CtiTK+lux8XpXY9JDzvDNmyFXiLZt76B9W2QX2UV2kV1k78tK2WIAlCc8rwBgLziKOABwlAh4KR98etCYVY2vde0PXvlj3qeehxpzt/1GFrpKZqErDwD8g0EfTwB2EfYCH6AWCn8VAL7GNAbZ6D85FmZaY8wYyBYcC9le+52WrjYWY05fj/me7LOICACcJBJmgMLOJQmfl3a7FxHZjHNdDTW/I9iPFr/xkH7DHAF5QJhrfCMuSRxFvJ6xmdPU9tvpajOWOZqirqaI+W/jnIu2c3IAx5V+5xOUHsc8Rf+surGjRVfj0NWWZMFUUkTEA0T/avcZU5yxUkCS6ePio7eP9BOXvW3RQL6u9zHns9PVsULSaJwT+0yAvXAv2/8kPJPy5kGnx/3o0bpKr2DgpPa+7w00v8rCx3pvHkks+o3a9AsLbOY0naM6YwYvmwKEGeAzEWYgy/jXffVo9uDYCgPxk5MZMxZddTpmaMInRol3Ch8jhgtyz6+Fea5v28II9tAOYtjesVkH/EYy05i92Zh5OC/t+ILX2QuOElFEuBcqjdtj4KVp3ip5Z/nBoWKNJQ9rI4szvlkTwLbAOUXzta8ntY9nhq1q4NunGNNhoH1h4HgQs+AnrW3hcAb01X2hQvGAB2zJFGczCRrZwuLrFtmJye5Fx7sBY5fPImLerykr4GQ4IZep3jr6iXHGzzFOKx68VlcQWdQVJKOpZwBJNwPcRAXJ6SPJf90sZBYy++aXP0OSKkjIcIWQGT4xU0GiInFJzfacPyfg1VbsC5ouWvaFdx0vUFaVl6b9qkfqyvA5NCBmqxCSGeDnEJLM4edYE75exwYKSV1usw3/zA7qVVrx3vEAuUVVzkoHXH2zftMB+gWAzC7/++y0zDsf6vR7lPgkIRFQfD6//jiXO+EBO6OCrcI6v/t91QAxrC3eyAfCG7TZ9+OucE7DfpOBuPr0tuw1LORJ7mAvtbkgHdyGJBm7+TrFk2GDitrPtcH8zG/iHA8vX1nsv19a6OpT0n5+Tx9armcA+M7C9v+w2Pf/iduvqzxqbwvctNfVpf02jK1+vq2rcj1f8vx+DuBzAPAv3EBgHgnu4RzHIqY7WvgNZeE38rj9mBkNdLblJwsfm1iM+ckiZk8txryykP1UB+eIhzVRJLauVz2YR27zOfb8xr8TzNGfhqyrn5iu8iFrme7hnLjM/4Zkhq2uatCntHQdQ1gO5WrO68Le43b7YPQFfvw6boPrIB8B/DARLii1jhfeD1efNspbuVkIN0lBFfytgt9OpEvy9x1JMiH5VwYvoMLazT4ArstcBRVu0zVcEJmINg/9ejC5L78MC25g/s0E10a65IAwr3oG+Izdat0mGbumZq2oZzggNFx9XCOG7bL+Khp9vZmy4Nsnfm4RczoviYrjBip8zjljpes1L3x7epvn7/8sT2rR7+ad3SkxLL4as66qNcwG8+fn4v2sWg6q6aLsXN5cyxaWWvHx+9jZ6up74NtXxGJcwxaKw4jborbHN9xPUc+Pag7s6tmWjUWteNqlrno9kz5xW5iirpx7eavKWa0zO2LObJm6TZQ1zGhan7PEVossJncnm2t8OxCeZM0iBtBVSS9SNZNFz4vsBDi31T0R9RbnFE4/vDjL+xrf1KnnVwPNkdfpeXZYnGfvZ9/HO4s1VIs72YCdg73EPhPKEwrOHj6Tk7nCwW1w38gU73TC3M6lznDMD+n3gs+p1DAbMr/AOTwgNNzmfczvvbN8aLe+LprpmZph91CL+d0eAGAvPOh7qQDsPLyIrCl+gXfmsZ7TsdxtiPH72KF01enayO9zmxrzm7tKtC3os1tGNizLnBvfVRL1cv+GN9B9UOgmjzNF7D1OXVXuZCvvYQ5zfelyZOp1nj0AsibJnTOyOUot9n37e9XULOq+5q2rOmtSlv8HtMgusovsIjtK2f8Bhp5A4uasQgQAAAAASUVORK5CYII=" alt="QR code to menti.com voting page" style="height:72vh;width:72vh;image-rendering:pixelated;border-radius:14px">
+    <div>
+      <div class="kicker">📱 Vote now</div>
+      <h1 style="font-size:4.2vw;margin:0 0 3vh">Scan to vote</h1>
+      <p class="big">or go to <b>menti.com</b></p>
+      <p class="mono" style="font-size:1.8vw;margin-top:1vh">menti.com/aly6ockooxw1</p>
+      <p class="muted" style="margin-top:4vh;font-size:1.2vw">Anonymous · takes 10 seconds</p>
+    </div>
   </div>
 </div>
 
@@ -552,7 +558,7 @@ textarea.doc{flex:1;width:100%;font-family:var(--mono);font-size:.85vw;line-heig
   <input id="sServer" value="http://localhost:8765">
   <div style="display:flex;gap:1vw;margin-top:2vh"><button class="btn" id="sSave">Save</button><button class="btn ghost" id="sTest">Test connection</button><button class="btn ghost" id="sClose">Close</button></div>
   <p class="small muted" id="sMsg" style="margin-top:1vh"></p>
-  <p class="small muted">Keys: ← → navigate · N notes · S settings · F fullscreen · M live vote</p>
+  <p class="small muted">Keys: ← → navigate · N notes · S settings · F fullscreen · Q vote QR code</p>
 </div></div>
 
 <script>
@@ -885,11 +891,10 @@ $('benchExport').onclick=()=>{ const a=document.createElement('a'); a.href=URL.c
 $('benchImport').onchange=async e=>{ const f=e.target.files[0]; if(!f) return; bench=JSON.parse(await f.text()); LS.setItem('pi_bench',JSON.stringify(bench)); renderBars(); };
 
 /* ============ MENTIMETER ============ */
-function openMenti(){ const f=$('mentiFrame'); if(!f.src) f.src=f.dataset.src; $('menti').classList.add('show'); }
+function openMenti(){ $('menti').classList.add('show'); }
 function closeMenti(){ $('menti').classList.remove('show'); }
 $('mentiClose').onclick=closeMenti;
-$('mentiReload').onclick=()=>{ const f=$('mentiFrame'); f.src=f.dataset.src; };
-document.addEventListener('keydown',e=>{ const t=e.target.tagName; if(t==='INPUT'||t==='TEXTAREA') return; if(e.key==='m'||e.key==='M'){ $('menti').classList.contains('show')?closeMenti():openMenti(); } });
+document.addEventListener('keydown',e=>{ const t=e.target.tagName; if(t==='INPUT'||t==='TEXTAREA') return; if(['m','M','q','Q'].includes(e.key)){ $('menti').classList.contains('show')?closeMenti():openMenti(); } });
 
 /* ============ INIT ============ */
 renderDocs(); updateStatus(); show(cur);
