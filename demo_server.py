@@ -9,8 +9,14 @@ Starts two local servers (nothing is reachable from outside this laptop):
                                               every email the agent sends and prints
                                               stolen data in this terminal.
 """
-import json, os, threading, time
-from http.server import HTTPServer, SimpleHTTPRequestHandler, BaseHTTPRequestHandler
+import json
+import os
+import re
+import threading
+import time
+from http.server import BaseHTTPRequestHandler, HTTPServer, SimpleHTTPRequestHandler, ThreadingHTTPServer
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
 
 HOST = "127.0.0.1"
 SLIDES_PORT = 8000
@@ -91,7 +97,97 @@ class AttackerHandler(BaseHTTPRequestHandler):
         pass
 
 
+def openai_error_message(error):
+    if error.code == 429:
+        with error:
+            try:
+                details = json.loads(error.read(16_384)).get("error", {})
+            except (ValueError, AttributeError):
+                details = {}
+        if not isinstance(details, dict):
+            details = {}
+        code = details.get("code")
+        if code in ("organization_spend_limit_exceeded", "project_spend_limit_exceeded", "api_key_spend_limit_exceeded", "organization_usage_limit_exceeded", "usage_limit_exceeded"):
+            return "OpenAI's API spend or usage limit was reached. Check the limits for this key's project and organization."
+        if code in ("insufficient_quota", "credit_balance_exhausted", "billing_not_active") or details.get("type") == "insufficient_quota":
+            return "OpenAI API billing or credits are unavailable for this key's organization. Check API Billing."
+        if code in ("rate_limit_exceeded", "slow_down") or details.get("type") == "rate_limit_error":
+            return "OpenAI temporarily rate-limited this request. Wait briefly before testing again."
+        return "OpenAI returned HTTP 429. Check API Billing and Limits for this key's organization, or wait before trying again."
+    if error.code == 401:
+        return "OpenAI could not authenticate this API key. Check the key in Settings."
+    if error.code in (403, 404):
+        return "OpenAI could not access this model. Check the model ID and the key's project permissions."
+    return f"OpenAI returned HTTP {error.code}."
+
+
 class QuietStatic(SimpleHTTPRequestHandler):
+    def do_POST(self):
+        if self.path != "/api/openai/summary":
+            return self.send_error(404)
+
+        host = self.headers.get("Host")
+        port = self.server.server_port
+        if host not in {f"localhost:{port}", f"127.0.0.1:{port}"} or self.headers.get("Origin") != f"http://{host}":
+            return self._json({"error": "Open the presentation from the local slide server."}, 403)
+
+        authorization = self.headers.get("Authorization", "")
+        if not re.fullmatch(r"Bearer sk-[A-Za-z0-9_-]{20,512}", authorization):
+            return self._json({"error": "Enter an OpenAI API key in Settings."}, 401)
+
+        try:
+            length = int(self.headers.get("Content-Length", ""))
+            if not 0 < length <= 16_384:
+                raise ValueError
+            data = json.loads(self.rfile.read(length))
+        except (ValueError, UnicodeError):
+            return self._json({"error": "Invalid summary request."}, 400)
+
+        model = data.get("model") if isinstance(data, dict) else None
+        if not isinstance(model, str) or not re.fullmatch(r"[A-Za-z0-9_.:-]{1,120}", model):
+            return self._json({"error": "Enter a valid OpenAI model ID."}, 400)
+        text = data.get("text")
+        if not isinstance(text, str) or len(text) > 4000:
+            return self._json({"error": "Provide slide text of up to 4,000 characters."}, 400)
+
+        request = Request(
+            "https://api.openai.com/v1/responses",
+            data=json.dumps({
+                "model": model,
+                "instructions": "Summarize the slide in two sentences." if text else "Reply with the single word: ready.",
+                "input": text or "Connection test.",
+                "max_output_tokens": 256,
+                "store": False,
+            }).encode("utf-8"),
+            headers={"Authorization": authorization, "Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            with urlopen(request, timeout=20) as response:
+                result = json.load(response)
+        except HTTPError as error:
+            return self._json({"error": openai_error_message(error)}, 502)
+        except (URLError, TimeoutError, ValueError):
+            return self._json({"error": "The local server could not get a response from OpenAI."}, 502)
+
+        answer = "".join(
+            part["text"]
+            for item in result.get("output", []) if item.get("type") == "message"
+            for part in item.get("content", []) if part.get("type") == "output_text"
+        ).strip()
+        if not answer:
+            return self._json({"error": "OpenAI did not return a text answer."}, 502)
+        return self._json({"text": answer}, 200)
+
+    def _json(self, data, status):
+        body = json.dumps(data).encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
     def log_message(self, *args):
         pass
 
@@ -99,7 +195,7 @@ class QuietStatic(SimpleHTTPRequestHandler):
 def main():
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     attacker = HTTPServer((HOST, ATTACKER_PORT), AttackerHandler)
-    slides = HTTPServer((HOST, SLIDES_PORT), QuietStatic)
+    slides = ThreadingHTTPServer((HOST, SLIDES_PORT), QuietStatic)
     threading.Thread(target=attacker.serve_forever, daemon=True).start()
     threading.Thread(target=slides.serve_forever, daemon=True).start()
     print(f"{BOLD}Demo running.{RESET}")

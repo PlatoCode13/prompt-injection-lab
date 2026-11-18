@@ -23,9 +23,11 @@ python demo_server.py
 
 Open `http://localhost:8000`, press **S**, paste a Gemini API key (free at aistudio.google.com) and click **Test connection**.
 
+To use GPT for the slide summary on slide 2, select **OpenAI (GPT)** in Settings, enter your OpenAI API key, and click **Test connection**. This option uses the local Python server. **Remember key on this computer** saves the selected provider’s key in this browser. Without it, the key lasts for the browser tab’s session.
+
 Keys: `→`/`←` navigate · `N` notes · `S` settings · `F` fullscreen · `Q` vote QR code.
 
-The slides also work without the server (e.g. on GitHub Pages); stolen data is then shown in the in-page panel instead of the terminal. API keys are only kept in your browser and never written to any file.
+The slides also work without the server (e.g. on GitHub Pages); stolen data is then shown in the in-page panel instead of the terminal. API keys are never written to disk by the Python server.
 
 ## The experiment
 
