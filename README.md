@@ -4,7 +4,7 @@
 
 An interactive presentation and live lab on **indirect prompt injection** in LLM agents, built for the course *Generative and Agentic AI* at HAW Hamburg (WiSe 2026/27, topic: AI Safety & Security).
 
-The slides contain a real agent: it calls an LLM API (Gemini or Claude), uses tools, reads a poisoned document, and tries to leak a canary token to a local "attacker server". Four defenses can be switched on live, and a benchmark runs the same attack many times to measure how often it succeeds.
+The slides contain a real agent: it calls an LLM API (Gemini or Claude), uses tools, reads a poisoned document, and tries to leak a canary token to a local "attacker server". Four defenses can be switched on live, and a benchmark runs the same attack many times to measure how often it succeeds, with several models (Gemini, Claude, Groq) side by side.
 
 ## What's inside
 
