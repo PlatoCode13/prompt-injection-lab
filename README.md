@@ -10,7 +10,7 @@ The slides contain a real agent: it calls an LLM API (Gemini or Claude), uses to
 
 | File | What it is |
 |---|---|
-| `index.html` | The presentation (17 slides) with the live agent demo and benchmark built in |
+| `index.html` | The presentation (16 slides) with the live agent demo and benchmark built in |
 | `demo_server.py` | Serves the slides and runs the local attacker server (`localhost:8765`) |
 | `docs/study-guide.html` | Background, paper summaries, demo walkthrough, Q&A |
 | `results/` | Exported benchmark runs (JSON) |
