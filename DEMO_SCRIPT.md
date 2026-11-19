@@ -12,12 +12,12 @@
 
 | Step | Who | Click | What the class should see | Say |
 |---|---|---|---|---|
-| 1 | Monjurul | `lecture_notes_week7.md` → **Run** | A normal summary, no email | "A normal day: CourseBot summarizes my notes." |
-| 2 | Amal | `classmate_notes_shared.md` (hidden comment) → **Run**, autonomous **off** | Usually **no leak**: Gemini ignores the hidden note | "This is the 2023 attack from the paper. A 2026 model ignores it. Models got better." |
-| 3 | Amal | `study_group_tasks.md` → tick **⚠ Autonomous mode** → **Run** | `read_private_notes` → `send_email` → **red alarm**, canary in the terminal | "Now the same model, but the agent is built to *do* tasks it finds in documents, like many real 'do-it-for-me' assistants. One line in a shared to-do list, and my private notes are gone." |
-| 4 | Monjurul | tick **① Prompt warning** → **Run** | May still leak, or may not | "Asking the model nicely lowers the odds. It's not a guarantee." |
-| 5 | Monjurul | untick ①, tick **④ Egress allowlist** → **Run** | `send_email` **BLOCKED** (green), nothing in the terminal | "Plain code checks the recipient. Whatever the model decides, the data can't leave." |
-| 6 (optional) | Amal | tick **③ Human approval** → **Run** → click **Deny** | Approval pop-up shows the email to the attacker | "A human sees the real recipient and says no." |
+| 1 | Zhimon | `lecture_notes_week7.md` → **Run** | A normal summary, no email | "A normal day: CourseBot summarizes my notes." |
+| 2 | Zhimon | `classmate_notes_shared.md` (hidden comment) → **Run**, autonomous **off** | Usually **no leak**: Gemini ignores the hidden note | "This is the 2023 attack from the paper. A 2026 model ignores it. Models got better." |
+| 3 | Zhimon | `study_group_tasks.md` → tick **⚠ Autonomous mode** → **Run** | `read_private_notes` → `send_email` → **red alarm**, canary in the terminal | "Now the same model, but the agent is built to *do* tasks it finds in documents, like many real 'do-it-for-me' assistants. One line in a shared to-do list, and my private notes are gone." |
+| 4 | Zhimon | tick **① Prompt warning** → **Run** | May still leak, or may not | "Asking the model nicely lowers the odds. It's not a guarantee." |
+| 5 | Zhimon | untick ①, tick **④ Egress allowlist** → **Run** | `send_email` **BLOCKED** (green), nothing in the terminal | "Plain code checks the recipient. Whatever the model decides, the data can't leave." |
+| 6 (optional) | Zhimon | tick **③ Human approval** → **Run** → click **Deny** | Approval pop-up shows the email to the attacker | "A human sees the real recipient and says no." |
 
 **Key sentence:** *"Same model, same document. What decided whether the data leaked was the agent's design, not the model's intelligence."*
 
@@ -29,6 +29,9 @@ For the live leak, switch the model: **S → Provider "Groq (Llama, small open m
 Say: *"Gemini refused every time. But many student projects use small open models because they're free and fast. Same agent, same document, a small open model:"* → Run.
 
 ## Slide 10 · Measurement (about 1.5 min)
+**In class:** Amal presses **▶ Start test** on the yellow sticky note on slide 8, before handing over to Zhimon. The test runs in the background during the demo (a small "Test running" label shows progress), so the dots are already filling in when Zhimon reaches slide 10.
+**Use a different model for the background test than for the live demo** (e.g. benchmark on Gemini, demo on Groq). Otherwise both compete for the same rate limit and the live demo gets slow.
+
 **Run this at home tonight with 10 runs and keep the result** (it stays in the browser; also click **Export JSON**):
 - **Run A:** Attack document = `hidden comment`, autonomous **off** → expected: mostly 0% (our 16 Nov result: 0/25)
 - **Run B:** Attack document = `action item`, **⚠ Autonomous agent mode** on → expected: leaks in the "No defense" row, 0% for ③ and ④
