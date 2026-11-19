@@ -1,7 +1,7 @@
 """
 Demo server for the prompt-injection presentation.
 
-  python demo_server.py
+  python3 demo_server.py
 
 Starts two local servers (nothing is reachable from outside this laptop):
   * http://localhost:8000                   : serves the slides
@@ -122,6 +122,11 @@ def openai_error_message(error):
 
 
 class QuietStatic(SimpleHTTPRequestHandler):
+    def end_headers(self):
+        if self.command in {"GET", "HEAD"}:
+            self.send_header("Cache-Control", "no-store")
+        super().end_headers()
+
     def do_POST(self):
         if self.path != "/api/openai/summary":
             return self.send_error(404)
@@ -198,16 +203,16 @@ def main():
     slides = ThreadingHTTPServer((HOST, SLIDES_PORT), QuietStatic)
     threading.Thread(target=attacker.serve_forever, daemon=True).start()
     threading.Thread(target=slides.serve_forever, daemon=True).start()
-    print(f"{BOLD}Demo running.{RESET}")
+    print(f"{BOLD}Presentation server running.{RESET}")
     page = "" if os.path.exists("index.html") else "Presentation.html"
-    print(f"  Slides:          {GREEN}http://localhost:{SLIDES_PORT}/{page}{RESET}")
-    print(f"  Attacker server: {RED}http://localhost:{ATTACKER_PORT}{RESET}  (stolen data appears below)")
-    print(f"{DIM}Press Ctrl+C to stop.{RESET}")
+    print(f"  Open slides in your browser  {GREEN}http://localhost:{SLIDES_PORT}/{page}{RESET}")
+    print(f"  Attacker server              {RED}http://localhost:{ATTACKER_PORT}{RESET}")
+    print(f"{DIM}Keep this terminal open while presenting. Ctrl+C stops the server.{RESET}")
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        print("\nbye")
+        print("\nPresentation server stopped.")
 
 
 if __name__ == "__main__":

@@ -61,7 +61,7 @@ p,li{font-size:1.65vw;line-height:1.45}
 .script-header{padding:.75rem 0;border-bottom:1px solid #444}
 .script-header h2{font-size:1rem;letter-spacing:normal;margin:0;color:var(--canary)}
 .script-meta{font-size:.85rem;color:#ccc;margin:.2rem 0 0}
-.script-text{min-height:0;overflow:auto;overscroll-behavior:contain;padding:.8rem 0 1.2rem;width:min(100%,74ch);margin:0 auto;font-size:clamp(1rem,1.55vw,1.4rem);line-height:1.55;white-space:pre-wrap}
+.script-text{min-height:0;overflow:auto;overscroll-behavior:contain;padding:.8rem .75rem 1.2rem 0;font-size:clamp(1rem,1.55vw,1.4rem);line-height:1.55;white-space:pre-wrap}
 .gear{position:fixed;bottom:1.2vh;left:1.4vw;z-index:40;background:#fff;border:1px solid var(--line);border-radius:10px;font-size:1.1vw;padding:.5vh .7vw;cursor:pointer;opacity:.35}
 .gear:hover{opacity:1}
 /* Title slide */
@@ -694,6 +694,10 @@ function show(i){
 }
 document.addEventListener('keydown',e=>{
   const t=e.target.tagName;
+  if(e.key==='Escape'&&(t==='INPUT'||t==='TEXTAREA')&&e.target.closest('.slide')){
+    e.target.blur();
+    return;
+  }
   if(t==='TEXTAREA'||t==='SELECT'||e.target.isContentEditable) return;
   if((e.key==='p'||e.key==='P')&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&!e.repeat){
     if(t!=='INPUT'||['checkbox','radio'].includes(e.target.type)){

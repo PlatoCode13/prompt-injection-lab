@@ -18,14 +18,16 @@ The slides contain a real agent: it calls an LLM API (Gemini or Claude), uses to
 ## Run it
 
 ```bash
-python demo_server.py
+python3 demo_server.py
 ```
 
-Open `http://localhost:8000`, press **S**, paste a Gemini API key (free at aistudio.google.com) and click **Test connection**.
+Open the **Slides** link printed in the terminal. Press **S**, paste a Gemini API key (free at aistudio.google.com) and click **Test connection**.
 
 To use GPT for the slide summary on slide 2, select **OpenAI (GPT)** in Settings, enter your OpenAI API key, and click **Test connection**. This option uses the local Python server. **Remember key on this computer** saves the selected provider’s key in this browser. Without it, the key lasts for the browser tab’s session.
 
 Keyboard shortcuts · `→`/`←` navigate · `P` presentation script · `N` notes · `S` settings · `F` fullscreen · `Q` vote QR code.
+
+After editing a field on a slide, press **Esc** to return to the slide shortcuts.
 
 The slides also work without the server (e.g. on GitHub Pages); stolen data is then shown in the in-page panel instead of the terminal. API keys are never written to disk by the Python server.
 
