@@ -624,7 +624,7 @@ textarea.doc{flex:1;width:100%;font-family:var(--mono);font-size:clamp(.69rem,.8
   <label>Provider</label>
   <select id="sProvider"><option value="gemini">Google Gemini</option><option value="claude">Anthropic Claude</option><option value="groq">Groq (Llama, small open models)</option><option value="openai">OpenAI (GPT)</option></select>
   <label>Model ID</label>
-  <input id="sModel" list="modelList">
+  <div style="display:flex;gap:.6vw"><input id="sModel" list="modelList" style="flex:1"><button class="btn ghost small" id="sLoadModels" type="button">↻ Load my models</button></div>
   <datalist id="modelList"></datalist>
   <label for="sKey">API key <span class="muted small">(kept in this browser)</span></label>
   <input id="sKey" type="password" placeholder="paste key" autocomplete="off" spellcheck="false">
@@ -664,7 +664,7 @@ const cfg = {
 const providerModels = {
   gemini: ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-3.8-flash'],
   claude: ['claude-haiku-5-5', 'claude-sonnet-5-5'],
-  groq: ['llama-3.1-8b-instant', 'llama-3.3-70b-versatile'],
+  groq: ['openai/gpt-oss-20b', 'openai/gpt-oss-120b'],
   openai: ['gpt-6.2-sol', 'gpt-6.2-astra', 'gpt-6.1-terra', 'gpt-6-luna']
 };
 const savedGptModel = LS.getItem('pi_gpt_model');
@@ -744,6 +744,28 @@ function openSettings(){
 $('gearBtn').onclick=openSettings;
 $('sClose').onclick=()=>{ $('settings').classList.remove('show'); $('sKey').value=''; };
 $('sProvider').onchange=showProviderFields;
+$('sLoadModels').onclick=async()=>{
+  const provider=$('sProvider').value, key=$('sKey').value.trim();
+  if(!key){ $('sMsg').textContent='Paste the API key first.'; return; }
+  $('sMsg').textContent='Loading models…';
+  try{
+    let ids=[];
+    if(provider==='groq'||provider==='openai'){
+      const url=provider==='groq'?'https://api.groq.com/openai/v1/models':'https://api.openai.com/v1/models';
+      const r=await fetch(url,{headers:{'Authorization':'Bearer '+key}}); const j=await r.json();
+      if(!r.ok) throw new Error((j.error&&j.error.message)||('HTTP '+r.status));
+      ids=(j.data||[]).map(m=>m.id).filter(id=>!/whisper|tts|orpheus|guard|embed/i.test(id));
+    } else if(provider==='gemini'){
+      const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=200',{headers:{'x-goog-api-key':key}}); const j=await r.json();
+      if(!r.ok) throw new Error((j.error&&j.error.message)||('HTTP '+r.status));
+      ids=(j.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes('generateContent')).map(m=>m.name.replace('models/',''));
+    } else { $('sMsg').textContent='Listing is not available for this provider; type the model ID.'; return; }
+    ids.sort();
+    $('modelList').replaceChildren(...ids.map(id=>new Option(id,id)));
+    if(ids.length && !ids.includes($('sModel').value)) $('sModel').value=ids[0];
+    $('sMsg').textContent=ids.length+' models available. Click the Model ID field to pick one, then Save.';
+  }catch(e){ $('sMsg').textContent='Could not load models: '+e.message; }
+};
 $('sSave').onclick=()=>{
   const provider=$('sProvider').value;
   const key=$('sKey').value.trim();

@@ -25,8 +25,8 @@
 
 ## Model comparison (added 19 Nov evening)
 Rehearsal result: **Gemini 3.5 Flash-Lite refused 4/4 times even in autonomous mode** (once it read the private notes, then stopped and warned the student). That's a strong finding: say it.
-For the live leak, switch the model: **S → Provider "Groq (Llama, small open models)" → model `llama-3.1-8b-instant` → Groq key → Test connection.**
-Say: *"Gemini refused every time. But many student projects use small open models because they're free and fast. Same agent, same document, Llama 3.1 8B:"* → Run.
+For the live leak, switch the model: **S → Provider "Groq (Llama, small open models)" → model `openai/gpt-oss-20b` (Groq retired the Llama 3.1 8B model in Aug 2026; use "↻ Load my models" to see what your key can use) → Groq key → Test connection.**
+Say: *"Gemini refused every time. But many student projects use small open models because they're free and fast. Same agent, same document, a small open model:"* → Run.
 
 ## Slide 11 · Measurement (about 1.5 min)
 **Run this at home tonight with 10 runs and keep the result** (it stays in the browser; also click **Export JSON**):
